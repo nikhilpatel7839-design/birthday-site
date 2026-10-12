@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Birthday Celebration</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Edit Website Button (Always Visible) -->
+    <button id="editBtn" class="edit-btn" title="Edit website content">
+        <span class="edit-icon">✎</span>
+    </button>
+
+    <!-- Editor Modal -->
+    <div id="editorModal" class="editor-modal hidden">
+        <div class="editor-container">
+            <div class="editor-header">
+                <h2>Edit Birthday Website</h2>
+                <button class="close-editor" id="closeEditor">&times;</button>
+            </div>
+
+            <div class="editor-tabs">
+                <button class="tab-btn active" data-tab="basic">Basic Info</button>
+                <button class="tab-btn" data-tab="content">Content</button>
+                <button class="tab-btn" data-tab="gallery">Gallery</button>
+                <button class="tab-btn" data-tab="memories">Memories</button>
+                <button class="tab-btn" data-tab="themes">Theme</button>
+                <button class="tab-btn" data-tab="import-export">Import/Export</button>
+            </div>
+
+            <div class="editor-content">
+                <!-- Basic Info Tab -->
+                <div class="tab-content active" id="basic">
+                    <div class="form-group">
+                        <label>Recipient Name</label>
+                        <input type="text" id="editRecipientName" placeholder="Enter name">
+                    </div>
+                    <div class="form-group">
+                        <label>Nickname</label>
+                        <input type="text" id="editNickname" placeholder="Enter nickname">
+                    </div>
+                    <div class="form-group">
+                        <label>Birthday Date (YYYY-MM-DD)</label>
+                        <input type="date" id="editBirthdayDate">
+                    </div>
+                    <div class="form-group">
+                        <label>Website Title</label>
+                        <input type="text" id="editWebsiteTitle" placeholder="Enter website title">
+                    </div>
+                    <div class="form-group">
+                        <label>Main Greeting</label>
+                        <input type="text" id="editMainGreeting" placeholder="Enter greeting">
+                    </div>
+                    <div class="form-group">
+                        <label>Music Track URL</label>
+                        <input type="url" id="editMusicUrl" placeholder="https://...">
+                    </div>
+                    <div class="form-group">
+                        <label>Music Track Title</label>
+                        <input type="text" id="editMusicTitle" placeholder="Enter track name">
+                    </div>
+                </div>
+
+                <!-- Content Tab -->
+                <div class="tab-content" id="content">
+                    <div class="form-group">
+                        <label>Birthday Letter</label>
+                        <textarea id="editBirthdayLetter" rows="6" placeholder="Write a heartfelt message"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Surprise Gift Message</label>
+                        <textarea id="editGiftMessage" rows="4" placeholder="Special gift message"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Final Message</label>
+                        <textarea id="editFinalMessage" rows="4" placeholder="Closing message"></textarea>
+                    </div>
+                    <div id="reasonsContainer" class="dynamic-list">
+                        <h3>Reasons You're Special</h3>
+                        <div id="reasonsList"></div>
+                        <button class="add-btn" id="addReasonBtn">+ Add Reason</button>
+                    </div>
+                </div>
+
+                <!-- Gallery Tab -->
+                <div class="tab-content" id="gallery">
+                    <div id="galleryContainer" class="dynamic-list">
+                        <h3>Photos</h3>
+                        <div id="galleryList"></div>
+                        <button class="add-btn" id="addPhotoBtn">+ Add Photo</button>
+                    </div>
+                </div>
+
+                <!-- Memories Tab -->
+                <div class="tab-content" id="memories">
+                    <div id="memoriesContainer" class="dynamic-list">
+                        <h3>Special Memories</h3>
+                        <div id="memoriesList"></div>
+                        <button class="add-btn" id="addMemoryBtn">+ Add Memory</button>
+                    </div>
+                </div>
+
+                <!-- Theme Tab -->
+                <div class="tab-content" id="themes">
+                    <div class="form-group">
+                        <label>Primary Color</label>
+                        <input type="color" id="editColorPrimary" value="#ff69b4">
+                    </div>
+                    <div class="form-group">
+                        <label>Secondary Color</label>
+                        <input type="color" id="editColorSecondary" value="#dda0dd">
+                    </div>
+                    <div class="form-group">
+                        <label>Accent Color</label>
+                        <input type="color" id="editColorAccent" value="#ffd700">
+                    </div>
+                    <div class="form-group checkbox">
+                        <input type="checkbox" id="editShowConfetti">
+                        <label>Enable Confetti Effects</label>
+                    </div>
+                    <div class="form-group checkbox">
+                        <input type="checkbox" id="editShowHearts">
+                        <label>Enable Floating Hearts</label>
+                    </div>
+                    <div class="form-group checkbox">
+                        <input type="checkbox" id="editShowSparkles">
+                        <label>Enable Sparkles</label>
+                    </div>
+                </div>
+
+                <!-- Import/Export Tab -->
+                <div class="tab-content" id="import-export">
+                    <div class="form-group">
+                        <button class="action-btn" id="exportBtn">📥 Export Content as JSON</button>
+                        <p class="help-text">Download all your birthday website data</p>
+                    </div>
+                    <div class="form-group">
+                        <label>Import Content from JSON</label>
+                        <input type="file" id="importFile" accept=".json">
+                        <p class="help-text">Upload a previously exported JSON file</p>
+                    </div>
+                    <div class="form-group">
+                        <button class="action-btn delete-btn" id="restoreDefaultsBtn">🔄 Restore Defaults</button>
+                        <p class="help-text">Reset all content to default values</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="editor-footer">
+                <button class="cancel-btn" id="cancelBtn">Cancel</button>
+                <button class="save-btn" id="saveBtn">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Website Content -->
+    <div id="mainContent" class="main-content">
+        <!-- Hero Section -->
+        <section id="hero" class="hero">
+            <div class="stars-bg"></div>
+            <div class="floating-elements">
+                <div class="floating-heart">💗</div>
+                <div class="floating-heart">💗</div>
+                <div class="floating-heart">💗</div>
+            </div>
+            <div class="hero-content">
+                <h1 id="mainTitle" class="main-title">Happy Birthday!</h1>
+                <p id="heroGreeting" class="hero-greeting">A special celebration for someone special</p>
+                <p id="recipientDisplay" class="recipient-name">Dear Friend</p>
+                <button id="startBtn" class="cta-btn">✨ Start Celebration ✨</button>
+            </div>
+        </section>
+
+        <!-- Countdown Section -->
+        <section id="countdown" class="countdown">
+            <div class="section-title">
+                <h2>Countdown to Your Birthday</h2>
+            </div>
+            <div class="countdown-display">
+                <div class="countdown-item">
+                    <div class="countdown-value" id="days">0</div>
+                    <div class="countdown-label">Days</div>
+                </div>
+                <div class="countdown-item">
+                    <div class="countdown-value" id="hours">0</div>
+                    <div class="countdown-label">Hours</div>
+                </div>
+                <div class="countdown-item">
+                    <div class="countdown-value" id="minutes">0</div>
+                    <div class="countdown-label">Minutes</div>
+                </div>
+                <div class="countdown-item">
+                    <div class="countdown-value" id="seconds">0</div>
+                    <div class="countdown-label">Seconds</div>
+                </div>
+            </div>
+            <div class="birthday-indicator" id="birthdayIndicator"></div>
+        </section>
+
+        <!-- Birthday Letter Section -->
+        <section id="letterSection" class="letter-section">
+            <div class="section-title">
+                <h2>A Special Letter for You</h2>
+            </div>
+            <button id="revealLetterBtn" class="reveal-btn">Reveal Letter</button>
+            <div id="letterContent" class="letter-content hidden">
+                <div class="letter-box">
+                    <p id="birthdayLetter">Write your heartfelt message here...</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Photo Gallery Section -->
+        <section id="gallerySection" class="gallery-section">
+            <div class="section-title">
+                <h2>Our Beautiful Moments</h2>
+            </div>
+            <div id="photoGallery" class="photo-gallery">
+                <!-- Gallery items will be inserted here -->
+            </div>
+            <div id="lightbox" class="lightbox hidden">
+                <div class="lightbox-content">
+                    <button class="lightbox-close">&times;</button>
+                    <img id="lightboxImg" src="" alt="">
+                    <p id="lightboxCaption"></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Memories Timeline Section -->
+        <section id="memoriesSection" class="memories-section">
+            <div class="section-title">
+                <h2>Our Special Memories</h2>
+            </div>
+            <div id="memoriesTimeline" class="memories-timeline">
+                <!-- Memory items will be inserted here -->
+            </div>
+        </section>
+
+        <!-- Reasons You're Special Section -->
+        <section id="reasonsSection" class="reasons-section">
+            <div class="section-title">
+                <h2>Reasons You're Special</h2>
+            </div>
+            <div id="reasonsGrid" class="reasons-grid">
+                <!-- Reason cards will be inserted here -->
+            </div>
+        </section>
+
+        <!-- Birthday Cake Section -->
+        <section id="cakeSection" class="cake-section">
+            <div class="section-title">
+                <h2>Make a Wish</h2>
+            </div>
+            <div class="cake-container">
+                <div class="cake">
+                    <div class="cake-layer bottom"></div>
+                    <div class="cake-layer middle"></div>
+                    <div class="cake-layer top"></div>
+                    <div class="candle-container" id="candleContainer">
+                        <div class="candle">
+                            <div class="flame"></div>
+                        </div>
+                        <div class="candle">
+                            <div class="flame"></div>
+                        </div>
+                        <div class="candle">
+                            <div class="flame"></div>
+                        </div>
+                    </div>
+                </div>
+                <button id="blowCandlesBtn" class="cta-btn">🎂 Blow Out Candles 🎂</button>
+            </div>
+        </section>
+
+        <!-- Music Player Section -->
+        <section id="musicSection" class="music-section">
+            <div class="section-title">
+                <h2 id="musicTitle">Birthday Music</h2>
+            </div>
+            <div class="music-player">
+                <audio id="audioPlayer" preload="none"></audio>
+                <div class="player-controls">
+                    <button id="playBtn" class="player-btn play-btn" title="Play">▶</button>
+                    <button id="pauseBtn" class="player-btn pause-btn" title="Pause">⏸</button>
+                    <button id="muteBtn" class="player-btn mute-btn" title="Mute">🔊</button>
+                </div>
+                <div class="progress-bar">
+                    <div id="progress" class="progress"></div>
+                </div>
+                <div class="time-display">
+                    <span id="currentTime">0:00</span> / <span id="duration">0:00</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Surprise Gift Section -->
+        <section id="giftSection" class="gift-section">
+            <div class="section-title">
+                <h2>🎁 Your Surprise Gift 🎁</h2>
+            </div>
+            <div class="gift-container">
+                <div id="giftBox" class="gift-box">
+                    <div class="gift-lid">
+                        <div class="gift-bow"></div>
+                    </div>
+                    <div class="gift-box-body"></div>
+                </div>
+                <button id="openGiftBtn" class="cta-btn">Open Gift</button>
+            </div>
+            <div id="giftReveal" class="gift-reveal hidden">
+                <div class="gift-reveal-content">
+                    <p id="giftMessage">Your surprise gift message appears here!</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Birthday Wishes Section -->
+        <section id="wishesSection" class="wishes-section">
+            <div class="section-title">
+                <h2>Birthday Wishes</h2>
+            </div>
+            <div id="wishesContainer" class="wishes-container">
+                <!-- Wish cards will be inserted here -->
+            </div>
+            <div class="add-wish-section">
+                <input type="text" id="wishInput" placeholder="Add a birthday wish..." maxlength="200">
+                <button id="addWishBtn" class="cta-btn">Add Wish</button>
+            </div>
+        </section>
+
+        <!-- Final Surprise Section -->
+        <section id="finalSection" class="final-section">
+            <div class="section-title">
+                <h2>One Last Thing...</h2>
+            </div>
+            <div class="final-content">
+                <div class="final-hearts">
+                    <span class="final-heart">💗</span>
+                    <span class="final-heart">💗</span>
+                    <span class="final-heart">💗</span>
+                </div>
+                <p id="finalMessage" class="final-message">Thank you for making this day so special. You mean the world to us!</p>
+                <div class="final-bottom-hearts">
+                    <span class="final-heart">💗</span>
+                    <span class="final-heart">💗</span>
+                    <span class="final-heart">💗</span>
+                </div>
+                <button id="replayBtn" class="cta-btn">🎉 Replay Celebration 🎉</button>
+            </div>
+        </section>
+    </div>
+
+    <!-- Confetti Container -->
+    <div id="confettiContainer" class="confetti-container"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
